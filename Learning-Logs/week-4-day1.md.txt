@@ -1,0 +1,12 @@
+# Week 4 — Day 1 Learning Log: Admin Layout, Roles & 3-Layer Access Protection
+ 
+**Project:** Aura Shop (`/admin`)
+
+## What I Read & Studied Today
+1. **Role-Based Access Control (RBAC):** Designing hierarchical permission matrices (`customer`, `staff`, `manager`, `admin`) where UI visibility is separated from actual server authorization.
+2. **Next.js Middleware (`src/middleware.ts`):** Intercepting `/admin/*` requests at the edge, refreshing Supabase SSR session cookies, and redirecting unauthenticated or unauthorized users before page rendering begins.
+3. **Server-Side Permission Guards (`src/lib/auth/guards.ts`):** Verifying the authenticated user's profile and active status (`!is_blocked`) inside Server Components and Server Actions so direct POST/RPC calls cannot bypass hidden UI links.
+4. **Supabase Row-Level Security (RLS) & `SECURITY DEFINER` Helpers:** Writing PostgreSQL RLS policies and `SECURITY DEFINER` helper functions (`get_my_role()`, `is_admin()`) with `SET search_path = public` to prevent infinite recursion when policies query the `profiles` table, plus a trigger preventing non-admins from escalating their own `role`.
+
+## Key Takeaway
+Hiding a sidebar link in React only improves UX—it provides zero security. Real protection requires defense-in-depth across three independent layers: **Middleware** (route gate), **Server Actions/Components** (execution gate), and **PostgreSQL RLS + triggers** (data gate).
